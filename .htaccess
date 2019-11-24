@@ -1,0 +1,53 @@
+Options -Indexes
+
+####EXTENSION REMOVAL
+Options +MultiViews
+RewriteEngine On
+
+#RewriteRule ^(iamadmin)($|/) - [L]
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} shop/$
+
+# check to see if the request is for a PHP file:
+RewriteCond %{REQUEST_FILENAME}\.php -f
+RewriteRule ^/?(.*)$ /$1.php [L]
+
+RewriteRule ^(.*)/$ $1
+RewriteRule ^([^\.]+)$ $1.php [L,QSA]
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^([^.]+)$ $1.php [NC,L]
+RewriteEngine on
+RewriteCond %{THE_REQUEST} /([^.]+)\.php [NC]
+RewriteRule ^ /%1 [NC,L,R]
+
+####EXTENSION REMOVAL
+
+#RewriteEngine on
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^find/([^/]*)\.php list.php?type=$1 [L,QSA]
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ /404.php [L]
+
+#Force www: change to ur domain
+#RewriteEngine on
+#RewriteCond %{HTTP_HOST} ^example.com [NC]
+#RewriteRule ^(.*)$ http://www.example.com/$1 [L,R=301,NC]
+
+#hide index.php - without extention
+#RewriteEngine On
+#RewriteCond %{THE_REQUEST} ^.*/index\.*
+#RewriteRule ^(.*)index.php$ /$1 [R=301,L] 
+
+#prevent downloading site
+RewriteEngine On
+RewriteCond %{HTTP_USER_AGENT} ^FlashGet.* [OR]
+RewriteCond %{HTTP_USER_AGENT} ^GetRight.* [OR]
+RewriteCond %{HTTP_USER_AGENT} ^.*HTTrack.*$ [OR]
+RewriteCond %{HTTP_USER_AGENT} ^.*MemoWeb.*$ [OR]
+RewriteCond %{HTTP_USER_AGENT} ^.*FileHound.*$
+RewriteRule /* http://www.example.com/do-not-steal.html [R,L]
